@@ -1,11 +1,11 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { WalletService } from '../services/wallet.service';
 
 @Controller('wallet')
 export class WalletController {
   constructor(private readonly walletService: WalletService) {}
 
-  @Post('api/wallet')
+  @Post()
   createWallet(@Body('token') token: string) {
     if (token) {
       console.log('Auth Token validation here');
@@ -19,6 +19,7 @@ export class WalletController {
     return res;
   }
 
+  @Get()
   public getWallet(): any {
     return this.walletService.getWallet();
   }

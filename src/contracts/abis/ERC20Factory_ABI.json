@@ -15,31 +15,8 @@
         "type": "uint256"
       }
     ],
-    "name": "NewERC20TokenContract",
+    "name": "NewERC20Token",
     "type": "event"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "string",
-        "name": "name",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "symbol",
-        "type": "string"
-      },
-      {
-        "internalType": "uint256",
-        "name": "initialSupply",
-        "type": "uint256"
-      }
-    ],
-    "name": "CreateNewERC20Token",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
   },
   {
     "inputs": [
@@ -89,16 +66,32 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "countERC20Token",
-    "outputs": [
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "symbol",
+        "type": "string"
+      },
       {
         "internalType": "uint256",
-        "name": "",
+        "name": "initialSupply",
         "type": "uint256"
       }
     ],
-    "stateMutability": "view",
+    "name": "createNewERC20Token",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -146,7 +139,20 @@
   },
   {
     "inputs": [],
-    "name": "getAllContracts",
+    "name": "erc20TokenCount",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getAllERC20Tokens",
     "outputs": [
       {
         "internalType": "contract ERC20Token[]",

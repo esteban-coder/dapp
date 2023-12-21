@@ -4,27 +4,25 @@ import { Injectable } from '@nestjs/common';
 
 // Local Dependencies.
 import ERC20_ABI from '../../../contracts/abis/ERC20_ABI.json';
-import FactoryERC20_ABI from '../../../contracts/abis/FactoryERC20_ABI.json';
+import ERC20Factory_ABI from '../../../contracts/abis/ERC20Factory_ABI.json';
+import { WalletService } from '../../wallet/services/wallet.service';
 import { ConfigService } from '../../../config/config.service';
 import { Blockchain } from '../../../config/config.keys';
 
 @Injectable()
 export class TokenService {
-  constructor(private readonly configService: ConfigService) {}
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly walletService: WalletService,
+  ) {}
 
   async deployERC20Token(
-    wallet: Wallet,
     tokenParams: { name: string; symbol: string; initialSupply: number; decimals: number },
   ): Promise<string> {
     const { name, symbol, initialSupply, decimals } = tokenParams;
-    //const methodName = 'CreateNewERC20Token(string,string,uint256)';
-    const methodName = 'CreateNewERC20Token';
-
-    const contract = new ethers.Contract(
-      this.configService.get(Blockchain.ERC20_FACTORY_ADDRESS),
-      FactoryERC20_ABI,
-      wallet,
-    );
+    //const methodName = 'createNewERC20Token(string,string,uint256)';
+    const methodName = 'createNewERC20Token';
+    const contract = this.getERC20TokenFactory();
     try {
 
       const num = initialSupply * Math.pow(10, decimals);
@@ -40,10 +38,12 @@ export class TokenService {
     }
   }
 
-  getFactoryERC20Contract(wallet: Wallet): Contract {
+  getERC20TokenFactory(): Contract {
+    // Get Wallet to Sign.
+    const wallet = this.walletService.getWallet();
     const contract = new ethers.Contract(
       this.configService.get(Blockchain.ERC20_FACTORY_ADDRESS),
-      FactoryERC20_ABI,
+      ERC20Factory_ABI,
       wallet,
     );
 
@@ -51,12 +51,12 @@ export class TokenService {
   }
 
   async balanceOfERC20Token(
-    wallet: Wallet,
     address: string,
     account: string,
   ): Promise<string> {
-    //console.log('wallet', wallet);
-    const contract = new ethers.Contract(address, ERC20_ABI, wallet);
+    const provider = this.walletService.getProvider();
+    //console.log('provider', provider);
+    const contract = new ethers.Contract(address, ERC20_ABI, provider);
     const balance = await contract.balanceOf(account);
 
     console.log('address: ' + address + '\n' + 'account: ' + account + '\n' + 'balance: ' + balance);
@@ -65,13 +65,12 @@ export class TokenService {
   }
 
   async transferERC20Token(
-    wallet: Wallet,
     address: string,
     to: string,
     value: number,
     decimals: number,
   ): Promise<void> {
-    //console.log('wallet: ', wallet);
+    const wallet = this.walletService.getWallet();
     const contract = new ethers.Contract(address, ERC20_ABI, wallet);
     const num = value * Math.pow(10, decimals);
     await contract.transfer(to, BigInt(num));

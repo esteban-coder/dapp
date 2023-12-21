@@ -1,6 +1,6 @@
 // Third Party Dependencies.
 import { Injectable } from '@nestjs/common';
-import { ethers, HDNodeWallet, JsonRpcProvider, Wallet } from 'ethers';
+import { ethers, HDNodeWallet, JsonRpcProvider, Provider, Wallet } from 'ethers';
 
 // Local Dependencies.
 import { ConfigService } from '../../../config/config.service';
@@ -9,6 +9,13 @@ import { Blockchain } from '../../../config/config.keys';
 @Injectable()
 export class WalletService {
   constructor(private readonly configService: ConfigService) {}
+
+  public getProvider(): Provider {
+    const provider: JsonRpcProvider = new ethers.JsonRpcProvider(
+      this.configService.get(Blockchain.MUMBAI_TESTNET_URL),
+    );
+    return provider;
+  }
 
   public getWallet(): Wallet {
     const provider: JsonRpcProvider = new ethers.JsonRpcProvider(

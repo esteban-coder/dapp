@@ -5,11 +5,11 @@
       {
         "indexed": false,
         "internalType": "address",
-        "name": "contractAddress",
+        "name": "erc721TokenAddress",
         "type": "address"
       }
     ],
-    "name": "NewContract",
+    "name": "NewERC721Token",
     "type": "event"
   },
   {
@@ -41,14 +41,19 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "",
+        "name": "_index",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_tokenId",
         "type": "uint256"
       }
     ],
-    "name": "ERC721Array",
+    "name": "callOwnerOf",
     "outputs": [
       {
-        "internalType": "contract ERC721",
+        "internalType": "address",
         "name": "",
         "type": "address"
       }
@@ -57,41 +62,10 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "amountOfContracts",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "string",
-        "name": "name",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "symbol",
-        "type": "string"
-      }
-    ],
-    "name": "createNewContract",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "_contractIndex",
+        "name": "_index",
         "type": "uint256"
       },
       {
@@ -105,7 +79,7 @@
         "type": "uint256"
       }
     ],
-    "name": "factoryMinter",
+    "name": "callSafeMint",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -113,22 +87,59 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
-        "name": "_contractIndex",
-        "type": "uint256"
+        "internalType": "string",
+        "name": "name",
+        "type": "string"
       },
       {
-        "internalType": "uint256",
-        "name": "_tokenId",
-        "type": "uint256"
+        "internalType": "string",
+        "name": "symbol",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "baseURI",
+        "type": "string"
       }
     ],
-    "name": "factoryOwnerOf",
+    "name": "createNewERC721Token",
     "outputs": [
       {
         "internalType": "address",
         "name": "",
         "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "erc721TokenArray",
+    "outputs": [
+      {
+        "internalType": "contract ERC721Token",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "erc721TokenCount",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
