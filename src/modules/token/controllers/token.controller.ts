@@ -33,10 +33,10 @@ export class TokenController {
   async deployERC20Token(
     @Body()
     params: {
-      name: string;
-      symbol: string;
-      initialSupply: number;
-      decimals: number
+      name: string,
+      symbol: string,
+      initialSupply: number,
+      addzeros: number
     },
   ) : Promise<Object> {
     //call method to deploy the ERC20 token

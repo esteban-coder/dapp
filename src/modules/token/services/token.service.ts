@@ -17,18 +17,19 @@ export class TokenService {
   ) {}
 
   async deployERC20Token(
-    params: { name: string; symbol: string; initialSupply: number; decimals: number },
+    params: { name: string; symbol: string; initialSupply: number; addzeros: number },
   ): Promise<string> {
-    const { name, symbol, initialSupply, decimals } = params;
+    const { name, symbol, addzeros } = params;
+    let { initialSupply } = params;
     //const methodName = 'createNewERC20Token(string,string,uint256)';
     const methodName = 'createNewERC20Token';
     const contract = this.getERC20TokenFactory();
     try {
-
-      const num = initialSupply * Math.pow(10, decimals);
-
-      //const tx = await contract[methodName](name, symbol, BigInt(num));
-      const tx = await contract.createNewERC20Token(name, symbol, BigInt(num));
+      if (addzeros && addzeros > 0) {
+        initialSupply = initialSupply * Math.pow(10, addzeros);
+      }
+      //const tx = await contract[methodName](name, symbol, BigInt(initialSupply));
+      const tx = await contract.createNewERC20Token(name, symbol, BigInt(initialSupply));
       const response = await tx.wait();
       console.log(`Smart Contract Method "${methodName}" tx:`, tx);
       console.log(`Smart Contract Method "${methodName}" response:`, response);
