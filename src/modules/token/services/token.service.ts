@@ -96,21 +96,21 @@ export class TokenService {
     await tx.wait();
   }
 
-  async transferERC20TokenFromToken(
-    token: string,
-    to: string,
-    value: number,
-    addzeros: number
-  ): Promise<void> {
-    const wallet = this.walletService.getWallet();
-    const contract = new ethers.Contract(token, ERC20_ABI, wallet);
-    //console.log(addzeros);
-    if (addzeros && addzeros > 0) {
-      value = value * Math.pow(10, addzeros);
-    }
-    const tx = await contract.transfer(to, BigInt(value));
-    await tx.wait();
-  }
+  // async transferERC20TokenFromToken(
+  //   token: string,
+  //   to: string,
+  //   value: number,
+  //   addzeros: number
+  // ): Promise<void> {
+  //   const wallet = this.walletService.getWallet();
+  //   const contract = new ethers.Contract(token, ERC20_ABI, wallet);
+  //   //console.log(addzeros);
+  //   if (addzeros && addzeros > 0) {
+  //     value = value * Math.pow(10, addzeros);
+  //   }
+  //   const tx = await contract.transfer(to, BigInt(value));
+  //   await tx.wait();
+  // }
 
   // async transferERC20TokenFromTokenConnect(
   //   token: string,

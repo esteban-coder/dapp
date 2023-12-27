@@ -95,17 +95,17 @@ export class TokenController {
     return {};
   }
 
-  @Post('transferFromToken')
-  public async transferERC20TokenFromToken(
-    @Body('token') token: string,
-    @Body('to') to: string,
-    @Body('value') value: number,
-    @Body('addzeros') addzeros: number,
-  ) {
-    console.log('transferFromToken => \ntoken: ' + token + '\n' + 'to: ' + to + '\n' + 'value: ' + value + '\n' + 'addzeros: ' + addzeros);
-    await this.tokenService.transferERC20TokenFromToken(token, to, value, addzeros);
-    return {};
-  }
+  // @Post('transferFromToken')
+  // public async transferERC20TokenFromToken(
+  //   @Body('token') token: string,
+  //   @Body('to') to: string,
+  //   @Body('value') value: number,
+  //   @Body('addzeros') addzeros: number,
+  // ) {
+  //   console.log('transferFromToken => \ntoken: ' + token + '\n' + 'to: ' + to + '\n' + 'value: ' + value + '\n' + 'addzeros: ' + addzeros);
+  //   await this.tokenService.transferERC20TokenFromToken(token, to, value, addzeros);
+  //   return {};
+  // }
 
   // @Post('transferFromTokenConnect')
   // public async transferERC20TokenFromTokenConnect(
