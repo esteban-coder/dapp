@@ -31,7 +31,7 @@
         "type": "address"
       }
     ],
-    "name": "callERC20TokenBalanceOf",
+    "name": "callBalanceOf",
     "outputs": [
       {
         "internalType": "uint256",
@@ -60,8 +60,42 @@
         "type": "uint256"
       }
     ],
-    "name": "callERC20TokenMint",
+    "name": "callMint",
     "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "from",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "value",
+        "type": "uint256"
+      }
+    ],
+    "name": "callTransfer",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
     "stateMutability": "nonpayable",
     "type": "function"
   },
@@ -83,7 +117,7 @@
         "type": "uint256"
       }
     ],
-    "name": "callERC20TokenTransfer",
+    "name": "callTransferFromFactory",
     "outputs": [
       {
         "internalType": "bool",

@@ -57,10 +57,7 @@ export class TokenService {
     return tokens;
   }
 
-  async balanceOfERC20Token(
-    token: string,
-    account: string,
-  ): Promise<string> {
+  async getBalance(token: string, account: string): Promise<string> {
     const provider = this.walletService.getProvider();
     // console.log('provider', provider);
     const contract = new ethers.Contract(token, ERC20_ABI, provider);
@@ -69,7 +66,7 @@ export class TokenService {
     return balance;
   }
 
-  async mintERC20Token(
+  async mint(
     params: { token: string; to: string; amount: number, addzeros: number },
   ) : Promise<void> {
     const { token, to, addzeros } = params;
@@ -78,11 +75,11 @@ export class TokenService {
     if (addzeros && addzeros > 0) {
       amount = amount * Math.pow(10, addzeros);
     }
-    const tx = await contract.callERC20TokenMint(token, to, BigInt(amount));
+    const tx = await contract.callMint(token, to, BigInt(amount));
     await tx.wait();
   }
 
-  async transferERC20Token(
+  async transferFromFactory(
     params: { token: string, to: string, value: number, addzeros: number },
   ): Promise<void> {
     const { token, to, addzeros } = params;
@@ -92,42 +89,22 @@ export class TokenService {
     if (addzeros && addzeros > 0) {
       value = value * Math.pow(10, addzeros);
     }
-    const tx = await contract.callERC20TokenTransfer(token, to, BigInt(value));
+    const tx = await contract.callTransferFromFactory(token, to, BigInt(value));
     await tx.wait();
   }
 
-  // async transferERC20TokenFromToken(
-  //   token: string,
-  //   to: string,
-  //   value: number,
-  //   addzeros: number
-  // ): Promise<void> {
-  //   const wallet = this.walletService.getWallet();
-  //   const contract = new ethers.Contract(token, ERC20_ABI, wallet);
-  //   //console.log(addzeros);
-  //   if (addzeros && addzeros > 0) {
-  //     value = value * Math.pow(10, addzeros);
-  //   }
-  //   const tx = await contract.transfer(to, BigInt(value));
-  //   await tx.wait();
-  // }
+  async transfer(
+    params: { token: string, from: string, to: string, value: number, addzeros: number },
+  ): Promise<void> {
+    const { token, from, to, addzeros } = params;
+    let { value } = params;
+    const contract = this.getERC20TokenFactory();
+    //console.log(addzeros);
+    if (addzeros && addzeros > 0) {
+      value = value * Math.pow(10, addzeros);
+    }
+    const tx = await contract.callTransfer(token, from, to, BigInt(value));
+    await tx.wait();
+  }
 
-  // async transferERC20TokenFromTokenConnect(
-  //   token: string,
-  //   from: string,
-  //   to: string,
-  //   value: number,
-  //   addzeros: number
-  // ): Promise<void> {
-  //   const wallet = this.walletService.getWallet();
-  //   var contract = new ethers.Contract(token, ERC20_ABI, wallet);
-  //   if (addzeros && addzeros > 0) {
-  //     value = value * Math.pow(10, addzeros);
-  //   }
-  //   // ERROR: Property 'transfer' does not exist on type 'BaseContract'.ts(2339)
-  //   // https://ethereum.stackexchange.com/questions/153195/property-proposer-role-does-not-exist-on-type-basecontract
-  //   // const tx = await contract.connect(wallet).transfer(to, BigInt(value));
-  //   const tx = await contract.connect(wallet).getFunction("transfer")(to, BigInt(value));
-  //   await tx.wait();
-  // }
 }

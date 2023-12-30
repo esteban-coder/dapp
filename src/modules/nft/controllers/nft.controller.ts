@@ -12,10 +12,14 @@ import {
 
 // Local Dependencies.
 import { NftService } from '../services/nft.service';
+import { Blockchain } from 'src/config/config.keys';
+import { ConfigService } from 'src/config/config.service';
 
 @Controller('nft')
 export class NftController {
+
   constructor(
+    private readonly configService: ConfigService,
     private readonly nftService: NftService
   ) {}
 
@@ -36,34 +40,65 @@ export class NftController {
     },
   ): Promise<Object> {
     //call method to deploy the ERC721 token
-    const contractAddress = await this.nftService.deployERC721Token(tokenParams);
-    return { "address" : contractAddress };
+    const token = await this.nftService.deployERC721Token(tokenParams);
+    return { 
+      "factory": this.configService.get(Blockchain.ERC721_FACTORY_ADDRESS),
+      "token" : token 
+    };
+  }
+
+  @Get('list')
+  async getERC721Tokens() {
+    const tokens = await this.nftService.getERC721Tokens();
+    return { 
+      "factory": this.configService.get(Blockchain.ERC721_FACTORY_ADDRESS),
+      tokens 
+    };
   }
 
   @Get('owner')
-  async getOwnerOfERC721Token(
-    @Query('address') address: string,
+  async getOwner(
+    @Query('token') token: string,
     @Query('tokenId') tokenId: string,
   ) {
-    const owner = await this.nftService.getOwner(address, tokenId);
+    const owner = await this.nftService.getOwner(token, tokenId);
     return { owner };
   }
 
   @Get('token_URI')
-  async getUriOfToken(
-    @Query('address') address: string,
+  async getTokenURI(
+    @Query('token') token: string,
     @Query('tokenId') tokenId: string,
   ) {
-    const tokenURI = await this.nftService.getTokenURI(address, tokenId);
+    const tokenURI = await this.nftService.getTokenURI(token, tokenId);
     return { tokenURI };
   }
 
-  // @Post(':tokenId/set-uri')
-  // async setTokenURI(
-  //   @Param('tokenId') tokenId: number,
-  //   @Body('tokenURI') tokenURI: string,
-  // ): Promise<void> {
-  //   await this.nftService.setTokenURI(tokenId, tokenURI);
-  // }
+  @Post('mint')
+  @HttpCode(HttpStatus.CREATED)
+  async safeMint(
+    @Body("token") token: string, @Body("to") to: string, @Body("tokenId") tokenId: number, @Body("uri") uri: string
+  ): Promise<Object> {
+    await this.nftService.safeMint(token, to, tokenId, uri);
+    return {};
+  }
+
+  @Post('transfer')
+  @HttpCode(HttpStatus.CREATED)
+  async safeTransfer(
+    @Body("token") token: string, @Body("from") from: string, @Body("to") to: string, @Body("tokenId") tokenId: number
+  ): Promise<Object> {
+    await this.nftService.safeTransfer(token, from, to, tokenId);
+    return {};
+  }
+
+  @Post('burn')
+  @HttpCode(HttpStatus.CREATED)
+  async burn(
+    @Body("token") token: string, @Body("from") from: string, @Body("tokenId") tokenId: number
+  ): Promise<Object> {
+    await this.nftService.burn(token, from,  tokenId);
+    return {};
+  }
 
 }

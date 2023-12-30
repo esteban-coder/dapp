@@ -29,7 +29,8 @@ export class NftService {
     const methodName = 'createNewERC721Token';
     const contract = this.getERC721TokenFactory();
     try {
-      const tx = await contract[methodName](name, symbol, baseURI);
+      //const tx = await contract[methodName](name, symbol, baseURI);
+      const tx = await contract.createNewERC721Token(name, symbol, baseURI);
       const response = await tx.wait();
       console.log(`Smart Contract Method "${methodName}" tx:`, tx);
       console.log(`Smart Contract Method "${methodName}" response:`, response);
@@ -57,19 +58,24 @@ export class NftService {
     return contract;
   }
 
+  async getERC721Tokens() {
+    const contract = this.getERC721TokenFactory();
+    const tokens = await contract.getAllERC721Tokens();
+    return tokens;
+  }
+
   /**
    * @todo Refactor this.
    * @task Get Owner of ERC721 Token.
    * @description This method will return the owner of an ERC721 Token.
    */
-  async getOwner(address: string, tokenId: string): Promise<string> {
+  async getOwner(token: string, tokenId: string): Promise<string> {
     const provider = this.walletService.getProvider();
-    const contract = new ethers.Contract(address, ERC721_ABI, provider);
+    const contract = new ethers.Contract(token, ERC721_ABI, provider);
     try {
       // if (!(await contract.ownerOf(tokenId)).call()) {
       //   throw new Error('Token no existente');
       // }
-
       return await contract.ownerOf(tokenId);
     } catch (error) {
       throw error;
@@ -81,9 +87,9 @@ export class NftService {
    * @task Get Token URI.
    * @description This method will return the URI of an ERC721 Token.
    */
-  async getTokenURI(address: string, tokenId: string): Promise<string> {
+  async getTokenURI(token: string, tokenId: string): Promise<string> {
     const provider = this.walletService.getProvider();
-    const contract = new ethers.Contract(address, ERC721_ABI, provider);
+    const contract = new ethers.Contract(token, ERC721_ABI, provider);
     try {
       const uri = await contract.tokenURI(tokenId);
       return uri;
@@ -92,17 +98,24 @@ export class NftService {
     }
   }
 
-  // async setBaseURI(address: string, newBaseURI: string): Promise<void> {
-  //   const wallet = this.walletService.getWallet();
-  //   const contract = new ethers.Contract(address, ERC721_ABI, wallet);
-  //   const owner = await contract.ownerOf(tokenId);
+  async safeMint(token: string, to: string, tokenId: number, uri: string): Promise<void> {
+    const contract = this.getERC721TokenFactory();
+    console.log('safeMint => \ntoken: ' + token + '\n' + 'to: ' + to + '\n' + 'tokenId: ' + tokenId + '\n' + 'uri: ' + uri);
+    const tx = await contract.callSafeMint(token, to, tokenId, uri);
+    console.log("safeMint 2");
+    await tx.wait();
+  }
 
-  //   if (owner !== (await wallet.getAddress())) {
-  //     throw new Error('No tienes permiso para establecer el URI del token.');
-  //   }
+  async safeTransfer(token: string, from: string, to: string, tokenId: number): Promise<void> {
+    const contract = this.getERC721TokenFactory();
+    const tx = await contract.callSafeTransfer(token, from, to, tokenId);
+    await tx.wait();
+  }
 
-  //   // Llamar a la función del contrato para establecer el URI del token
-  //   await contract.setTokenURI(tokenId, tokenURI);
-  // }
+  async burn(token: string, from: string, tokenId: number): Promise<void> {
+    const contract = this.getERC721TokenFactory();
+    const tx = await contract.callBurn(token, from, tokenId);
+    await tx.wait();
+  }
 
 }

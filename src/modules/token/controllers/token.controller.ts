@@ -50,16 +50,19 @@ export class TokenController {
   @Get('list')
   async getERC20Tokens() {
     const tokens = await this.tokenService.getERC20Tokens();
-    return { tokens };
+    return { 
+      "factory": this.configService.get(Blockchain.ERC20_FACTORY_ADDRESS),
+      tokens 
+    };
   }
 
   @Get('balance')
-  async balanceOfERC20Token(
+  async getBalance(
     @Query('token') token: string,
     @Query('account') account: string,
   ) {
     console.log('token: ' + token + '\n' + 'account: ' + account);
-    let balance = await this.tokenService.balanceOfERC20Token(token, account);
+    let balance = await this.tokenService.getBalance(token, account);
     console.log('balance: ' + balance);
     // console.log(typeof balance);
     balance = balance.toString();
@@ -67,7 +70,7 @@ export class TokenController {
   }
 
   @Post('mint')
-  async mintERC20Token(
+  async mint(
     @Body()
     params: {
       token: string,
@@ -76,12 +79,12 @@ export class TokenController {
       addzeros: number
     },
   ) : Promise<Object> {
-    await this.tokenService.mintERC20Token(params);
+    await this.tokenService.mint(params);
     return {};
   }
 
-  @Post('transfer')
-  async transferERC20Token(
+  @Post('transferFromFactory')
+  async transferFromFactory(
     @Body()
     params: {
       token: string,
@@ -91,33 +94,26 @@ export class TokenController {
     },
   ) : Promise<Object> {
     console.log('transfer => \ntoken: ' + params.token + '\n' + 'to: ' + params.to + '\n' + 'value: ' + params.value + '\n' + 'addzeros: ' + params.addzeros);
-    await this.tokenService.transferERC20Token(params);
+    await this.tokenService.transferFromFactory(params);
     return {};
   }
 
-  // @Post('transferFromToken')
-  // public async transferERC20TokenFromToken(
-  //   @Body('token') token: string,
-  //   @Body('to') to: string,
-  //   @Body('value') value: number,
-  //   @Body('addzeros') addzeros: number,
-  // ) {
-  //   console.log('transferFromToken => \ntoken: ' + token + '\n' + 'to: ' + to + '\n' + 'value: ' + value + '\n' + 'addzeros: ' + addzeros);
-  //   await this.tokenService.transferERC20TokenFromToken(token, to, value, addzeros);
-  //   return {};
-  // }
+  @Post('transfer')
+  async transfer(
+    @Body()
+    params: {
+      token: string,
+      from: string,
+      to: string,
+      value: number,
+      addzeros: number
+    },
+  ) : Promise<Object> {
+    console.log('transfer => \ntoken: ' + params.token + '\n' + 'from: ' + params.from + '\n' + 'to: ' + params.to + '\n' + 'value: ' + params.value + '\n' + 'addzeros: ' + params.addzeros);
+    await this.tokenService.transfer(params);
+    return {};
+  }
 
-  // @Post('transferFromTokenConnect')
-  // public async transferERC20TokenFromTokenConnect(
-  //   @Body('token') token: string,
-  //   @Body('from') from: string,
-  //   @Body('to') to: string,
-  //   @Body('value') value: number,
-  //   @Body('addzeros') addzeros: number,
-  // ) {
-  //   console.log('transferFromTokenConnect => \ntoken: ' + token + '\n' + 'to: ' + to + '\n' + 'value: ' + value + '\n' + 'addzeros: ' + addzeros);
-  //   await this.tokenService.transferERC20TokenFromTokenConnect(token, from, to, value, addzeros);
-  //   return {};
-  // }
+
 
 }
