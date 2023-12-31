@@ -40,10 +40,11 @@ export class NftController {
     },
   ): Promise<Object> {
     //call method to deploy the ERC721 token
-    const token = await this.nftService.deployERC721Token(tokenParams);
-    return { 
+    const response = await this.nftService.deployERC721Token(tokenParams);
+    return {
+      "hash" : response.hash,
       "factory": this.configService.get(Blockchain.ERC721_FACTORY_ADDRESS),
-      "token" : token 
+      "token" : response.address,
     };
   }
 
@@ -79,8 +80,9 @@ export class NftController {
   async safeMint(
     @Body("token") token: string, @Body("to") to: string, @Body("tokenId") tokenId: number, @Body("uri") uri: string
   ): Promise<Object> {
-    await this.nftService.safeMint(token, to, tokenId, uri);
-    return {};
+    console.log('safeMint => \ntoken: ' + token + '\n' + 'to: ' + to + '\n' + 'tokenId: ' + tokenId + '\n' + 'uri: ' + uri);
+    const hash = await this.nftService.safeMint(token, to, tokenId, uri);
+    return { "hash": hash };
   }
 
   @Post('transfer')
@@ -88,8 +90,8 @@ export class NftController {
   async safeTransfer(
     @Body("token") token: string, @Body("from") from: string, @Body("to") to: string, @Body("tokenId") tokenId: number
   ): Promise<Object> {
-    await this.nftService.safeTransfer(token, from, to, tokenId);
-    return {};
+    const hash = await this.nftService.safeTransfer(token, from, to, tokenId);
+    return { hash };
   }
 
   @Post('burn')
@@ -97,8 +99,8 @@ export class NftController {
   async burn(
     @Body("token") token: string, @Body("from") from: string, @Body("tokenId") tokenId: number
   ): Promise<Object> {
-    await this.nftService.burn(token, from,  tokenId);
-    return {};
+    const hash = await this.nftService.burn(token, from,  tokenId);
+    return { hash };
   }
 
 }

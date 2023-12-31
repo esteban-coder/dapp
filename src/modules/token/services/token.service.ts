@@ -18,7 +18,7 @@ export class TokenService {
 
   async deployERC20Token(
     params: { name: string; symbol: string; initialSupply: number; addzeros: number },
-  ): Promise<string> {
+  ): Promise<{ "hash": string, "address": string }> {
     const { name, symbol, addzeros } = params;
     let { initialSupply } = params;
     //const methodName = 'createNewERC20Token(string,string,uint256)';
@@ -30,11 +30,12 @@ export class TokenService {
       }
       //const tx = await contract[methodName](name, symbol, BigInt(initialSupply));
       const tx = await contract.createNewERC20Token(name, symbol, BigInt(initialSupply));
-      const response = await tx.wait();
+      const receipt = await tx.wait();
       console.log(`Smart Contract Method "${methodName}" tx:`, tx);
-      console.log(`Smart Contract Method "${methodName}" response:`, response);
-      const address = response.logs[0].address;
-      return address;
+      console.log(`Smart Contract Method "${methodName}" receipt:`, receipt);
+      const hash = receipt.hash;
+      const address = receipt.logs[0].address;
+      return { "hash": hash, "address": address };
     } catch (error) {
       throw error;
     }
@@ -68,7 +69,7 @@ export class TokenService {
 
   async mint(
     params: { token: string; to: string; amount: number, addzeros: number },
-  ) : Promise<void> {
+  ) : Promise<string> {
     const { token, to, addzeros } = params;
     let { amount } = params;
     const contract = this.getERC20TokenFactory();
@@ -76,12 +77,13 @@ export class TokenService {
       amount = amount * Math.pow(10, addzeros);
     }
     const tx = await contract.callMint(token, to, BigInt(amount));
-    await tx.wait();
+    const receipt = await tx.wait();
+    return receipt.hash;
   }
 
   async transferFromFactory(
     params: { token: string, to: string, value: number, addzeros: number },
-  ): Promise<void> {
+  ): Promise<string> {
     const { token, to, addzeros } = params;
     let { value } = params;
     const contract = this.getERC20TokenFactory();
@@ -90,12 +92,13 @@ export class TokenService {
       value = value * Math.pow(10, addzeros);
     }
     const tx = await contract.callTransferFromFactory(token, to, BigInt(value));
-    await tx.wait();
+    const receipt = await tx.wait();
+    return receipt.hash;
   }
 
   async transfer(
     params: { token: string, from: string, to: string, value: number, addzeros: number },
-  ): Promise<void> {
+  ): Promise<string> {
     const { token, from, to, addzeros } = params;
     let { value } = params;
     const contract = this.getERC20TokenFactory();
@@ -104,7 +107,8 @@ export class TokenService {
       value = value * Math.pow(10, addzeros);
     }
     const tx = await contract.callTransfer(token, from, to, BigInt(value));
-    await tx.wait();
+    const receipt = await tx.wait();
+    return receipt.hash;
   }
 
 }

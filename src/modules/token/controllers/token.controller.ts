@@ -40,10 +40,11 @@ export class TokenController {
     },
   ) : Promise<Object> {
     //call method to deploy the ERC20 token
-    const token = await this.tokenService.deployERC20Token(params);
-    return { 
+    const response = await this.tokenService.deployERC20Token(params);
+    return {
+      "hash" : response.hash,
       "factory": this.configService.get(Blockchain.ERC20_FACTORY_ADDRESS),
-      "token" : token 
+      "token" : response.address,
     };
   }
 
@@ -79,8 +80,8 @@ export class TokenController {
       addzeros: number
     },
   ) : Promise<Object> {
-    await this.tokenService.mint(params);
-    return {};
+    const hash = await this.tokenService.mint(params);
+    return { hash };
   }
 
   @Post('transferFromFactory')
@@ -94,8 +95,8 @@ export class TokenController {
     },
   ) : Promise<Object> {
     console.log('transfer => \ntoken: ' + params.token + '\n' + 'to: ' + params.to + '\n' + 'value: ' + params.value + '\n' + 'addzeros: ' + params.addzeros);
-    await this.tokenService.transferFromFactory(params);
-    return {};
+    const hash = await this.tokenService.transferFromFactory(params);
+    return { hash };
   }
 
   @Post('transfer')
@@ -110,8 +111,8 @@ export class TokenController {
     },
   ) : Promise<Object> {
     console.log('transfer => \ntoken: ' + params.token + '\n' + 'from: ' + params.from + '\n' + 'to: ' + params.to + '\n' + 'value: ' + params.value + '\n' + 'addzeros: ' + params.addzeros);
-    await this.tokenService.transfer(params);
-    return {};
+    const hash = await this.tokenService.transfer(params);
+    return { hash };
   }
 
 

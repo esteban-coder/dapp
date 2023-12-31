@@ -23,7 +23,7 @@ export class NftService {
    */
   async deployERC721Token(
     tokenParams: { name: string; symbol: string; baseURI: string },
-  ): Promise<string> {
+  ): Promise<{ "hash": string, "address": string }> {
     const { name, symbol, baseURI } = tokenParams;
     //const methodName = 'createNewERC721Token(string,string,string)';
     const methodName = 'createNewERC721Token';
@@ -31,11 +31,12 @@ export class NftService {
     try {
       //const tx = await contract[methodName](name, symbol, baseURI);
       const tx = await contract.createNewERC721Token(name, symbol, baseURI);
-      const response = await tx.wait();
+      const receipt = await tx.wait();
       console.log(`Smart Contract Method "${methodName}" tx:`, tx);
-      console.log(`Smart Contract Method "${methodName}" response:`, response);
-      const address = response.logs[0].address;
-      return address;
+      console.log(`Smart Contract Method "${methodName}" receipt:`, receipt);
+      const address = receipt.logs[0].address;
+      const hash = receipt.hash;
+      return { "address": address, "hash": hash };
     } catch (error) {
       throw error;
     }
@@ -91,31 +92,31 @@ export class NftService {
     const provider = this.walletService.getProvider();
     const contract = new ethers.Contract(token, ERC721_ABI, provider);
     try {
-      const uri = await contract.tokenURI(tokenId);
-      return uri;
+      return await contract.tokenURI(tokenId);
     } catch (error) {
       throw error;
     }
   }
 
-  async safeMint(token: string, to: string, tokenId: number, uri: string): Promise<void> {
+  async safeMint(token: string, to: string, tokenId: number, uri: string): Promise<string> {
     const contract = this.getERC721TokenFactory();
-    console.log('safeMint => \ntoken: ' + token + '\n' + 'to: ' + to + '\n' + 'tokenId: ' + tokenId + '\n' + 'uri: ' + uri);
     const tx = await contract.callSafeMint(token, to, tokenId, uri);
-    console.log("safeMint 2");
-    await tx.wait();
+    const receipt = await tx.wait();
+    return receipt.hash;
   }
 
-  async safeTransfer(token: string, from: string, to: string, tokenId: number): Promise<void> {
+  async safeTransfer(token: string, from: string, to: string, tokenId: number): Promise<string> {
     const contract = this.getERC721TokenFactory();
     const tx = await contract.callSafeTransfer(token, from, to, tokenId);
-    await tx.wait();
+    const receipt = await tx.wait();
+    return receipt.hash;
   }
 
-  async burn(token: string, from: string, tokenId: number): Promise<void> {
+  async burn(token: string, from: string, tokenId: number): Promise<string> {
     const contract = this.getERC721TokenFactory();
     const tx = await contract.callBurn(token, from, tokenId);
-    await tx.wait();
+    const receipt = await tx.wait();
+    return receipt.hash;
   }
 
 }
