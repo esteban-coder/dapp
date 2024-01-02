@@ -23,14 +23,14 @@ export class TokenService {
   /**
    * @memberof TokenService
    * @description Deploy an ERC20 Token.
-   * @param {Object} params - Token Parameters.
+   * @param {Object} tokenParams - Token Parameters.
    * @returns {Promise<{ "hash": string, "address": string }>} - Transaction Hash and Contract Address.
    */
   async deployERC20Token(
-    params: { name: string; symbol: string; initialSupply: number; addzeros: number },
+    tokenParams: { name: string; symbol: string; initialSupply: number; addzeros: number },
   ): Promise<{ "hash": string, "address": string }> {
-    const { name, symbol, addzeros } = params;
-    let { initialSupply } = params;
+    const { name, symbol, addzeros } = tokenParams;
+    let { initialSupply } = tokenParams;
     //const methodName = 'createNewERC20Token(string,string,uint256)';
     const methodName = 'createNewERC20Token';
     const contract = this.getERC20TokenFactory();

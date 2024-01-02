@@ -21,9 +21,10 @@ export class NftService {
   ) {}
 
   /**
-   * @todo Refactor this.
-   * @task Deploy ERC721 Token.
-   * @description This method will deploy an ERC721 Token.
+   * @description Deploy an ERC721 Token.
+   * @memberof NftService
+   * @param {Object} tokenParams - Token Parameters.
+   * @returns {Promise<{ "hash": string, "address": string }>} - Transaction Hash and Contract Address.
    */
   async deployERC721Token(
     tokenParams: { name: string; symbol: string; baseURI: string },
@@ -47,9 +48,9 @@ export class NftService {
   }
 
   /**
-   * @description Get ERC721 Contract.
+   * @description Get the ERC721 Token Factory contract.
    * @memberof NftService
-   * @returns {Contract} - ERC721 Contract.
+   * @returns {Contract} - ERC721 Token Factory contract instance.
    */
   getERC721TokenFactory(): Contract {
     // Get Wallet to Sign.

@@ -14,6 +14,10 @@ import { TokenService } from '../services/token.service';
 import { Blockchain } from 'src/config/config.keys';
 import { ConfigService } from 'src/config/config.service';
 
+/**
+ * @description Controller for managing ERC20 tokens.
+ * @memberof TokenController
+ */
 @Controller('token')
 export class TokenController {
 
@@ -32,7 +36,7 @@ export class TokenController {
   @HttpCode(HttpStatus.CREATED)
   async deployERC20Token(
     @Body()
-    params: {
+    tokenParams: {
       name: string,
       symbol: string,
       initialSupply: number,
@@ -40,7 +44,7 @@ export class TokenController {
     },
   ) : Promise<Object> {
     //call method to deploy the ERC20 token
-    const response = await this.tokenService.deployERC20Token(params);
+    const response = await this.tokenService.deployERC20Token(tokenParams);
     return {
       "hash" : response.hash,
       "factory": this.configService.get(Blockchain.ERC20_FACTORY_ADDRESS),
