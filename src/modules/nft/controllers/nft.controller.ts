@@ -15,6 +15,10 @@ import { NftService } from '../services/nft.service';
 import { Blockchain } from 'src/config/config.keys';
 import { ConfigService } from 'src/config/config.service';
 
+/**
+ * @description Controller for managing ERC721 tokens (NFTs).
+ * @memberof NftController
+ */
 @Controller('nft')
 export class NftController {
 
@@ -48,6 +52,11 @@ export class NftController {
     };
   }
 
+  /**
+   * @description Get the list of deployed ERC721 tokens.
+   * @memberof NftController
+   * @returns {Promise<Object>} - Factory Address and List of ERC721 Token addresses.
+   */
   @Get('list')
   async getERC721Tokens() {
     const tokens = await this.nftService.getERC721Tokens();
@@ -57,6 +66,13 @@ export class NftController {
     };
   }
 
+  /**
+   * @description Get the owner of a specific ERC721 token and tokenId.
+   * @memberof NftController
+   * @param {string} token - ERC721 Token Address.
+   * @param {string} tokenId - Token ID.
+   * @returns {Promise<Object>} - Token Owner.
+   */
   @Get('owner')
   async getOwner(
     @Query('token') token: string,
@@ -66,6 +82,13 @@ export class NftController {
     return { owner };
   }
 
+  /**
+   * @description Get the URI of a specific ERC721 token and tokenId.
+   * @memberof NftController
+   * @param {string} token - ERC721 Token Address.
+   * @param {string} tokenId - Token ID.
+   * @returns {Promise<Object>} - Token URI.
+   */
   @Get('token_URI')
   async getTokenURI(
     @Query('token') token: string,
@@ -75,6 +98,15 @@ export class NftController {
     return { tokenURI };
   }
 
+  /**
+   * @description Mint a new NFT using the safeMint method.
+   * @memberof NftController
+   * @param {string} token - ERC721 Token Address.
+   * @param {string} to - Recipient Address.
+   * @param {number} tokenId - Token ID.
+   * @param {string} uri - Token URI.
+   * @returns {Promise<Object>} - Transaction Hash.
+   */
   @Post('mint')
   @HttpCode(HttpStatus.CREATED)
   async safeMint(
@@ -85,6 +117,15 @@ export class NftController {
     return { "hash": hash };
   }
 
+  /**
+   * @description Transfer an NFT using the safeTransfer method.
+   * @memberof NftController
+   * @param {string} token - ERC721 Token Address.
+   * @param {string} from - Sender Address.
+   * @param {string} to - Recipient Address.
+   * @param {number} tokenId - Token ID.
+   * @returns {Promise<Object>} - Transaction Hash.
+   */
   @Post('transfer')
   @HttpCode(HttpStatus.CREATED)
   async safeTransfer(
@@ -94,6 +135,14 @@ export class NftController {
     return { hash };
   }
 
+  /**
+   * @description Burn an NFT using the burn method.
+   * @memberof NftController
+   * @param {string} token - ERC721 Token Address.
+   * @param {string} from - Owner Address.
+   * @param {number} tokenId - Token ID.
+   * @returns {Promise<Object>} - Transaction Hash.
+   */
   @Post('burn')
   @HttpCode(HttpStatus.CREATED)
   async burn(

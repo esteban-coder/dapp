@@ -9,6 +9,10 @@ import { WalletService } from '../../wallet/services/wallet.service';
 import { ConfigService } from '../../../config/config.service';
 import { Blockchain } from '../../../config/config.keys';
 
+/**
+ * @description Service for managing ERC721 tokens (NFTs).
+ * @memberof NftService
+ */
 @Injectable()
 export class NftService {
   constructor(
@@ -43,9 +47,9 @@ export class NftService {
   }
 
   /**
-   * @todo Refactor this.
-   * @task Get ERC721 Contract.
-   * @description This method will return the ERC721 Contract.
+   * @description Get ERC721 Contract.
+   * @memberof NftService
+   * @returns {Contract} - ERC721 Contract.
    */
   getERC721TokenFactory(): Contract {
     // Get Wallet to Sign.
@@ -59,6 +63,11 @@ export class NftService {
     return contract;
   }
 
+  /**
+   * @description Get the list of deployed ERC721 tokens.
+   * @memberof NftService
+   * @returns {Promise<Array>} - List of ERC721 Token addresses.
+   */
   async getERC721Tokens() {
     const contract = this.getERC721TokenFactory();
     const tokens = await contract.getAllERC721Tokens();
@@ -66,9 +75,11 @@ export class NftService {
   }
 
   /**
-   * @todo Refactor this.
-   * @task Get Owner of ERC721 Token.
-   * @description This method will return the owner of an ERC721 Token.
+   * @description Get the owner of an ERC721 Token.
+   * @memberof NftService
+   * @param {string} token - ERC721 Token Address.
+   * @param {string} tokenId - Token ID.
+   * @returns {Promise<string>} - Token Owner.
    */
   async getOwner(token: string, tokenId: string): Promise<string> {
     const provider = this.walletService.getProvider();
@@ -84,9 +95,11 @@ export class NftService {
   }
 
   /**
-   * @todo Refactor this.
-   * @task Get Token URI.
-   * @description This method will return the URI of an ERC721 Token.
+   * @description Get the URI of an ERC721 Token.
+   * @memberof NftService
+   * @param {string} token - ERC721 Token Address.
+   * @param {string} tokenId - Token ID.
+   * @returns {Promise<string>} - Token URI.
    */
   async getTokenURI(token: string, tokenId: string): Promise<string> {
     const provider = this.walletService.getProvider();
@@ -98,6 +111,15 @@ export class NftService {
     }
   }
 
+  /**
+   * @description Mint a new NFT using the safeMint method.
+   * @memberof NftService
+   * @param {string} token - ERC721 Token Address.
+   * @param {string} to - Recipient Address.
+   * @param {number} tokenId - Token ID.
+   * @param {string} uri - Token URI.
+   * @returns {Promise<string>} - Transaction Hash.
+   */
   async safeMint(token: string, to: string, tokenId: number, uri: string): Promise<string> {
     const contract = this.getERC721TokenFactory();
     const tx = await contract.callSafeMint(token, to, tokenId, uri);
@@ -105,6 +127,15 @@ export class NftService {
     return receipt.hash;
   }
 
+  /**
+   * @description Transfer an NFT using the safeTransfer method.
+   * @memberof NftService
+   * @param {string} token - ERC721 Token Address.
+   * @param {string} from - Sender Address.
+   * @param {string} to - Recipient Address.
+   * @param {number} tokenId - Token ID.
+   * @returns {Promise<string>} - Transaction Hash.
+   */
   async safeTransfer(token: string, from: string, to: string, tokenId: number): Promise<string> {
     const contract = this.getERC721TokenFactory();
     const tx = await contract.callSafeTransfer(token, from, to, tokenId);
@@ -112,6 +143,14 @@ export class NftService {
     return receipt.hash;
   }
 
+  /**
+   * @description Burn an NFT using the burn method.
+   * @memberof NftService
+   * @param {string} token - ERC721 Token Address.
+   * @param {string} from - Owner Address.
+   * @param {number} tokenId - Token ID.
+   * @returns {Promise<string>} - Transaction Hash.
+   */
   async burn(token: string, from: string, tokenId: number): Promise<string> {
     const contract = this.getERC721TokenFactory();
     const tx = await contract.callBurn(token, from, tokenId);
