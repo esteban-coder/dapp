@@ -48,6 +48,11 @@ export class TokenController {
     };
   }
 
+  /**
+   * @memberof TokenController
+   * @description Get the list of deployed ERC20 tokens.
+   * @returns {Object} - Factory Address and ERC20 Tokens.
+   */
   @Get('list')
   async getERC20Tokens() {
     const tokens = await this.tokenService.getERC20Tokens();
@@ -57,6 +62,13 @@ export class TokenController {
     };
   }
 
+  /**
+   * @memberof TokenController
+   * @description Get the balance of an account for a specific ERC20 token.
+   * @param {string} token - ERC20 Token Address.
+   * @param {string} account - Account Address.
+   * @returns {Object} - Token Balance.
+   */
   @Get('balance')
   async getBalance(
     @Query('token') token: string,
@@ -70,6 +82,12 @@ export class TokenController {
     return { balance };
   }
 
+  /**
+   * @memberof TokenController
+   * @description Mint new tokens for a specific ERC20 token.
+   * @param {Object} params - Minting Parameters: token address, to address, amount to transfer, amount of zeros of token.
+   * @returns {Object} - Transaction Hash.
+   */
   @Post('mint')
   async mint(
     @Body()
@@ -84,6 +102,12 @@ export class TokenController {
     return { hash };
   }
 
+  /**
+   * @memberof TokenController
+   * @description Transfer tokens from the ERC20 factory to a specific address.
+   * @param {Object} params - Transfer Parameters: token address, to address, amount to transfer, amount of zeros of token..
+   * @returns {Object} - Transaction Hash.
+   */
   @Post('transferFromFactory')
   async transferFromFactory(
     @Body()
@@ -99,6 +123,12 @@ export class TokenController {
     return { hash };
   }
 
+  /**
+   * @memberof TokenController
+   * @description Transfer tokens from one address to another for a specific ERC20 token.
+   * @param {Object} params - Transfer Parameters: token address, from address, to address, amount to transfer, amount of zeros of token.
+   * @returns {Object} - Transaction Hash.
+   */
   @Post('transfer')
   async transfer(
     @Body()

@@ -9,6 +9,10 @@ import { WalletService } from '../../wallet/services/wallet.service';
 import { ConfigService } from '../../../config/config.service';
 import { Blockchain } from '../../../config/config.keys';
 
+/**
+ * @description Service for managing ERC20 tokens.
+ * @memberof TokenService
+ */
 @Injectable()
 export class TokenService {
   constructor(
@@ -16,6 +20,12 @@ export class TokenService {
     private readonly walletService: WalletService,
   ) {}
 
+  /**
+   * @memberof TokenService
+   * @description Deploy an ERC20 Token.
+   * @param {Object} params - Token Parameters.
+   * @returns {Promise<{ "hash": string, "address": string }>} - Transaction Hash and Contract Address.
+   */
   async deployERC20Token(
     params: { name: string; symbol: string; initialSupply: number; addzeros: number },
   ): Promise<{ "hash": string, "address": string }> {
@@ -41,6 +51,11 @@ export class TokenService {
     }
   }
 
+  /** 
+   * @memberof TokenService
+   * @description Get the ERC20 Token Factory contract.
+   * @returns {Contract} - ERC20 Token Factory contract instance.
+   */
   getERC20TokenFactory(): Contract {
     // Get Wallet to Sign.
     const wallet = this.walletService.getWallet();
@@ -52,12 +67,24 @@ export class TokenService {
     return contract;
   }
 
+  /**
+   * @memberof TokenService
+   * @description Get the list of deployed ERC20 tokens.
+   * @returns {Promise<string[]>} - List of ERC20 Token addresses.
+   */
   async getERC20Tokens() {
     const contract = this.getERC20TokenFactory();
     const tokens = await contract.getAllERC20Tokens();
     return tokens;
   }
 
+  /**
+   * @memberof TokenService
+   * @description Get the balance of an account for a specific ERC20 token.
+   * @param {string} token - ERC20 Token Address.
+   * @param {string} account - Account Address.
+   * @returns {Promise<string>} - Token Balance.
+   */
   async getBalance(token: string, account: string): Promise<string> {
     const provider = this.walletService.getProvider();
     // console.log('provider', provider);
@@ -67,6 +94,12 @@ export class TokenService {
     return balance;
   }
 
+  /**
+   * @memberof TokenService
+   * @description Mint new tokens for a specific ERC20 token.
+   * @param {Object} params - Minting Parameters.
+   * @returns {Promise<string>} - Transaction Hash.
+   */
   async mint(
     params: { token: string; to: string; amount: number, addzeros: number },
   ) : Promise<string> {
@@ -81,6 +114,12 @@ export class TokenService {
     return receipt.hash;
   }
 
+  /**
+   * @memberof TokenService
+   * @description Transfer tokens from the ERC20 factory to a specific address.
+   * @param {Object} params - Transfer Parameters.
+   * @returns {Promise<string>} - Transaction Hash.
+   */
   async transferFromFactory(
     params: { token: string, to: string, value: number, addzeros: number },
   ): Promise<string> {
@@ -96,6 +135,12 @@ export class TokenService {
     return receipt.hash;
   }
 
+  /**
+   * @memberof TokenService
+   * @description Transfer tokens from one address to another for a specific ERC20 token.
+   * @param {Object} params - Transfer Parameters.
+   * @returns {Promise<string>} - Transaction Hash.
+   */
   async transfer(
     params: { token: string, from: string, to: string, value: number, addzeros: number },
   ): Promise<string> {

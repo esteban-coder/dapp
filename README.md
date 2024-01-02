@@ -1,73 +1,196 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Decentralized Token and NFT Factory Plattform
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+The application serves as a bridge between the traditional Web2 world and the decentralized Web3 blockchain environment. Its primary goal is to enable companies to seamlessly integrate into the Ethereum blockchain, allowing them to tokenize assets or create digital representations of their operations. The application provides a set of RESTful API endpoints accessible from the traditional web, facilitating interaction with smart contracts deployed on the Ethereum blockchain.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+### Key Features
+#### ERC20 Token Management:
 
-## Description
+- **Create ERC20 Token:** Companies can create their ERC20 tokens through the application, specifying details such as the token's name, symbol, initial supply, and additional decimal places.
+- **Token List:** Retrieve a list of all deployed ERC20 tokens associated with the factory address.
+#### Token Operations:
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- **Check Token Balance:** Get the balance of a specific ERC20 token for a given Ethereum address.
+- **Mint Tokens:** Mint additional tokens to a specified Ethereum address, expanding the token supply.
+- **Transfer Tokens:** Facilitate the transfer of tokens between Ethereum addresses.
 
-## Installation
+#### ERC721 Token (NFT) Management:
 
-```bash
-$ npm install
-```
+- **Create ERC721 Token (NFT):** Similar to ERC20, the application allows companies to create ERC721 tokens (NFTs) with unique properties.
+- **List Deployed NFTs:** Retrieve a list of all deployed ERC721 tokens (NFTs) associated with the factory address.
+#### NFT Operations:
 
-## Running the app
+- **Check NFT Owner:** Determine the current owner of a specific ERC721 token (NFT) identified by its token ID.
+- **Get Token URI:** Retrieve the Uniform Resource Identifier (URI) associated with a specific ERC721 token (NFT).
+- **Safe Mint and Transfer:** Mint new NFTs or safely transfer existing ones between Ethereum addresses.
+- **Burn NFT:** Permanently remove an ERC721 token (NFT) from circulation.
+### Technologies Used
+- **NestJS:** A framework for building scalable and efficient server-side applications in Node.js.
+- **Ethereum Smart Contracts:** Solidity-based contracts deployed on the Ethereum blockchain.
+- **Solidity:** The programming language used for writing smart contracts.
+- **OpenZeppelin Contracts:** A library for secure and community-vetted Ethereum smart contracts.
 
-```bash
-# development
-$ npm run start
+By providing these functionalities, the application simplifies the process for companies to leverage blockchain technology, enabling them to tokenize assets, manage tokens, and participate in the decentralized finance ecosystem.
 
-# watch mode
-$ npm run start:dev
+## Token Creation
 
-# production mode
-$ npm run start:prod
-```
+### ERC20 Token Factory
 
-## Test
+#### Deploy a New ERC20 Token
+- **Endpoint:** `POST /token`
+- **Request Body:**
+  ```json
+  {
+    "name": "YourTokenName",
+    "symbol": "TOKEN",
+    "initialSupply": 1000000,
+    "addzeros": 18
+  }
+- **Response**:
+  ```json
+  {
+    "hash": "TransactionHash",
+    "factory": "ERC20FactoryAddress",
+    "token": "NewERC20TokenAddress"
+  }
 
-```bash
-# unit tests
-$ npm run test
+#### Get List of Deployed ERC20 Tokens
+- **Endpoint:` GET /token/list`**
+- **Response:**
+  ````json
+  {
+    "factory": "ERC20FactoryAddress",
+    "tokens": ["Token1Address", "Token2Address", ...]
+  }
 
-# e2e tests
-$ npm run test:e2e
+#### Check Token Balance
+- **Endpoint: `GET /token/balance`**
+- **Query Parameters:**
+  - token: ERC20 Token Address
+  - account: User's Ethereum Address
+- **Response:**
+  ````json
+  {
+    "balance": "TokenBalance"
+  }
 
-# test coverage
-$ npm run test:cov
-```
+#### Mint ERC20 Tokens
+- **Endpoint: `POST /token/mint`**
+Request Body:
+  ````json
+  {
+    "token": "TokenAddress",
+    "to": "RecipientAddress",
+    "amount": 1000,
+    "addzeros": 18
+  }
+- **Response:**
+  ````json
+  {
+    "hash": "TransactionHash"
+  }
+#### Transfer ERC20 Tokens
+- **Endpoint: `POST /token/transfer`**
+- **Request Body:**
+  ````json
+  {
+    "token": "TokenAddress",
+    "from": "SenderAddress",
+    "to": "RecipientAddress",
+    "value": 500,
+    "addzeros": 18
+  }
+- **Response:**
+  ````json
+  {
+    "hash": "TransactionHash"
+  }
+### ERC721 Token Factory
 
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+#### Deploy a New ERC721 Token (NFT)
+- **Endpoint: `POST /nft`**
+- **Request Body:** 
+  ````json
+  {
+    "name": "YourNFTName",
+    "symbol": "NFT",
+    "baseURI": "BaseTokenURI"
+  }
+- **Response:**
+  ````json
+  {
+    "hash": "TransactionHash",
+    "factory": "ERC721FactoryAddress",
+    "token": "NewERC721TokenAddress"
+  }
+#### Get List of Deployed ERC721 Tokens (NFTs)
+- **Endpoint: `GET /nft/list`**
+- **Response:**
+  ````json
+  {
+    "factory": "ERC721FactoryAddress",
+    "tokens": ["NFT1Address", "NFT2Address", ...]
+  }
+#### Check NFT Owner
+- **Endpoint: `GET /nft/owner`**
+- **Query Parameters:**
+  - token: ERC721 Token Address
+  - tokenId: NFT Token ID
+- **Response:**
+  ````json
+  {
+    "owner": "NFTOwnerAddress"
+  }
+#### Get Token URI for NFT
+- **Endpoint: `GET /nft/token_URI`**
+- **Query Parameters:**
+  - token: ERC721 Token Address
+  - tokenId: NFT Token ID
+- **Response:**
+  ````json
+  {
+    "tokenURI": "NFTTokenURI"
+  }
+#### Mint NFT (Safe Mint)
+- **Endpoint: `POST /nft/mint`**
+- **Request Body:**
+  ````json
+  {
+    "token": "NFTAddress",
+    "to": "RecipientAddress",
+    "tokenId": 1,
+    "uri": "TokenURI"
+  }
+- **Response:**
+  ````json
+  {
+    "hash": "TransactionHash"
+  }
+#### Transfer NFT (Safe Transfer)
+- **Endpoint: `POST /nft/transfer`**
+- **Request Body:**
+  ````json
+  {
+    "token": "NFTAddress",
+    "from": "SenderAddress",
+    "to": "RecipientAddress",
+    "tokenId": 1
+  }
+- **Response:**
+  ````json
+  {
+    "hash": "TransactionHash"
+  }
+#### Burn NFT
+- **Endpoint: POST /nft/burn**
+- **Request Body:**
+  ````json
+  {
+    "token": "NFTAddress",
+    "from": "OwnerAddress",
+    "tokenId": 1
+  }
+- **Response:**
+  ````json
+  {
+    "hash": "TransactionHash"
+  }
